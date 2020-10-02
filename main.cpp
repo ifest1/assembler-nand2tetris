@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     int current_line = 0;
     int variable_address = 16;
 
-    // load symbols
+    // load labels
     while (file_handler.read_line(line))
     {
         instruction = line;
@@ -48,42 +48,49 @@ int main(int argc, char **argv) {
                 if (!tradutor.is_on_symbol_table(value))
                     tradutor.add_symbol(value, current_line);
             }
-            else if (parser.is_variable(instruction))
-            {
-                value = parser.get_variable(instruction);
-                if(!tradutor.is_on_symbol_table(value))
-                {
-                    tradutor.add_symbol(value, variable_address);
-                    variable_address++;
-                }
-            } 
-            current_line++;
+            else current_line++;
         }
     }
 
-    line.clear();
-    value.clear();
-    instruction.clear();
-    file_handler.reset();
+    line.clear(); value.clear(); instruction.clear(); file_handler.reset();
+
+    //load variables
+    while (file_handler.read_line(line))
+    {
+        instruction = line;
+        line.clear();
+        if (parser.is_variable(instruction))
+        {
+            value = parser.get_variable(instruction);
+            if(!tradutor.is_on_symbol_table(value))
+            {
+                tradutor.add_symbol(value, variable_address);
+                variable_address++;
+            }
+        } 
+    }
+
+    line.clear(); value.clear(); instruction.clear(); file_handler.reset();
 
     // transfers symbols from symbol table to temp file
     while (file_handler.read_line(line))
     {
         instruction = line;
-        if (parser.is_variable(instruction))
+        if(!parser.ignore_line(instruction))
         {
-            value = parser.get_variable(instruction);
-            value = tradutor.get_symbol_value(value);
-            instruction = value;
+            if (parser.is_variable(instruction))
+            {
+                value = parser.get_variable(instruction);
+                value = tradutor.get_symbol_value(value);
+                instruction = value;
+            }
+            if (!parser.is_label(instruction))
+                file_handler.write_line(instruction);
         }
-        if (!(parser.is_label(instruction)))
-            file_handler.write_line(instruction);
     }
-
-    line.clear();
-    value.clear();
-    instruction.clear();
-    file_handler.close_stream();
+    
+    line.clear(); value.clear(); instruction.clear(); file_handler.close_stream();
+    
     file_handler.set_input_file(temp_file);
     file_handler.set_output_file(output_file);
     
@@ -93,7 +100,6 @@ int main(int argc, char **argv) {
         instruction = line;
         
         line.clear();
-        cout << line << endl;
         if (!parser.ignore_line(instruction))
         {
             if(parser.instruction_type(instruction))

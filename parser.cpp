@@ -35,19 +35,22 @@ void Parser::split_c(string instruction)
 
 string Parser::get_value(string value)
 {
+    value = split(value, "//")[0];
     del_char(value, '@'); del_char(value, ' ');
     return value;
 }
 
 string Parser::get_label(string value)
 {
-    del_char(value, '('); del_char(value, ')');
+    value = split(value, "//")[0];
+    del_char(value, '('); del_char(value, ')'); del_char(value, ' ');
     return value;
 }
 
 string Parser::get_variable(string value)
 {
-    del_char(value, '@');
+    value = split(value, "//")[0];
+    del_char(value, '@'); del_char(value, ' ');
     return value;
 }
 
@@ -56,7 +59,7 @@ bool Parser::is_variable(string value)
 {
     vector<string> values = split(value, "@");
     if (values.size() > 1)
-        return (!isdigit(values[0][0]));
+        return (!isdigit(values[1][0]));
     return false;
 }
 

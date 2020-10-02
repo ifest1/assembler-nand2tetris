@@ -99,11 +99,7 @@ void Tradutor::init_remaining_predef_symbols()
 }
 
 
-string Tradutor::bitify(string raw_value)
-{
-    int t = stoi(raw_value);
-    return get_bit_sequence_from_int(t);
-}
+string Tradutor::bitify(string raw_value) { return get_bit_sequence_from_int(stoi(raw_value)); }
 
 void Tradutor::reset() { binary_instruction.clear(); value.clear(); }
 
