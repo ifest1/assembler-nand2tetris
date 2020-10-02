@@ -7,7 +7,7 @@ using namespace std;
 
 Tradutor::Tradutor()
 {
-    init_instruction_variables();
+    reset();
     init_jump_bits_map();
     init_comp_bits_map();
     init_dest_bits_map();
@@ -86,12 +86,6 @@ void Tradutor::set_a_value(string raw_value)
     reset();
     int t = stoi(raw_value);
     value = bitset<16>(t).to_string();
-}
-
-void Tradutor::init_instruction_variables()
-{
-    binary_instruction.clear();
-    value.clear();
 }
 
 string Tradutor::get_binary_instruction()

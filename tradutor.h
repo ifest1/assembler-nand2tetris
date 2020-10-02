@@ -19,8 +19,6 @@ class Tradutor
         void init_jump_bits_map();
         void init_dest_bits_map();
         void init_comp_bits_map();
-        
-        void init_instruction_variables();
 
         string get_binary_instruction();
         string get_a_value();
