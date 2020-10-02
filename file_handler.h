@@ -17,6 +17,8 @@ class FileHandler
 
         bool read_line(string &line);
         void write_line(string line);
-    
+
+        void reset();
+        
         void close_stream();
 };

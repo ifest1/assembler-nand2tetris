@@ -39,3 +39,9 @@ void FileHandler::close_stream()
     input_file.close();
     output_file.close();
 }
+
+void FileHandler::reset()
+{
+    input_file.clear();
+    input_file.seekg(0);
+}

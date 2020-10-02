@@ -4,3 +4,12 @@ code_test.asm
 main.o
 testes.exe
 testes.c
+test.cpp
+test.asm
+test.tmp
+Max.asm
+Max.tmp
+Max.hack
+test.hack
+a.exe
+assemblerL.exe

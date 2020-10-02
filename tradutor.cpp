@@ -11,6 +11,8 @@ Tradutor::Tradutor()
     init_jump_bits_map();
     init_comp_bits_map();
     init_dest_bits_map();
+    init_symbol_table();
+    init_remaining_predef_symbols();
 }
 
 void Tradutor::init_jump_bits_map()
@@ -75,32 +77,45 @@ void Tradutor::init_comp_bits_map()
     };
 }
 
-void Tradutor::concatenate(string dest, string comp, string jump)
-{   
-    reset();
-    binary_instruction = "111" + comp_bits[comp] + dest_bits[dest] + jump_bits[jump];
+void Tradutor::init_symbol_table()
+{
+    string r;
+    for(int i = 0; i <= 15; i++)
+    {
+        r = to_string(i);
+        symbol_table["R"+r] = i;
+    }
 }
 
-void Tradutor::set_a_value(string raw_value)
+void Tradutor::init_remaining_predef_symbols()
 {
-    reset();
+    symbol_table["SCREEN"] = 16384;
+    symbol_table["KBD"] = 24576;
+    symbol_table["SP"] = 0;
+    symbol_table["LCL"] = 1;
+    symbol_table["ARG"] = 2;
+    symbol_table["THIS"] = 3;
+    symbol_table["THAT"] = 4;
+}
+
+
+string Tradutor::bitify(string raw_value)
+{
     int t = stoi(raw_value);
-    value = bitset<16>(t).to_string();
+    return get_bit_sequence_from_int(t);
 }
 
-string Tradutor::get_binary_instruction()
-{
-    return binary_instruction;
-}
+void Tradutor::reset() { binary_instruction.clear(); value.clear(); }
 
-string Tradutor::get_a_value()
-{
-    return value;
-}
+void Tradutor::concatenate(string dest, string comp, string jump) { binary_instruction = "111" + comp_bits[comp] + dest_bits[dest] + jump_bits[jump]; }
 
-void Tradutor::reset()
-{
-    binary_instruction.clear();
-    value.clear();
-}
+bool Tradutor::is_on_symbol_table(string key) { return symbol_table.count(key); }
+
+void Tradutor::add_symbol(string key, int value) { symbol_table[key] = value; }
+
+string Tradutor::get_symbol_value(string key) { return "@"+to_string(symbol_table[key]); }
+
+string Tradutor::get_binary_instruction() { return binary_instruction; }
+
+string Tradutor::get_bit_sequence_from_int(int t) { return bitset<16>(t).to_string(); }
 

@@ -23,8 +23,9 @@ vector<string> split(string s, string delimiter)
     return res;
 }
 
+
 void del_char(string &str, char c) 
 {
    str.erase(remove(str.begin(), str.end(), c), str.end());
-   str.erase(remove(str.begin(), str.end(), '\n'), str.end());
+   str.erase(remove(str.begin(), str.end(), '\r'), str.end());
 }
